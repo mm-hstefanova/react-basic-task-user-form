@@ -1,0 +1,16 @@
+.users {
+  /* background: red; */
+}
+
+.user__row {
+  min-height: 38px;
+  border-radius: 6px;
+  border: 1px solid #e6a1a1;
+  padding: 6px 16px;
+  font-size: 16px;
+  line-height: 26px;
+}
+
+.user__row + .user__row {
+  margin-top: 8px;
+}
