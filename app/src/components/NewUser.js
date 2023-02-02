@@ -1,4 +1,5 @@
 import UserForm from './UserForm';
+import { v4 as uuidv4 } from 'uuid';
 
 function NewUser(props) {
   const addNewUserHandler = (user) => {
@@ -6,7 +7,7 @@ function NewUser(props) {
 
     const newUser = {
       ...user,
-      id: '222',
+      id: uuidv4(),
     };
 
     props.onAddNewUser(newUser);
