@@ -1,10 +1,15 @@
 import styles from './UserForm.module.css';
 import Button from './Button';
+import Modal from './Modal';
+
 import { useState } from 'react';
 
 function UserForm(props) {
   const [username, setUsername] = useState('');
   const [age, setAge] = useState('');
+  const [isValid, setIsValid] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showModal, setShowModal] = useState(false);
 
   const usernameChangeHandler = (event) => {
     setUsername(event.target.value);
@@ -15,6 +20,23 @@ function UserForm(props) {
   const submitHandler = (event) => {
     event.preventDefault();
 
+    // validation
+    if (username.length === 0 || age.length === 0) {
+      setIsValid(false);
+      setShowModal(true);
+      setErrorMessage('Please enter a valid name and age (non-empty values)');
+      return;
+    }
+
+    if (age < 0) {
+      setIsValid(false);
+      setShowModal(true);
+
+      setErrorMessage('Age should be a positive number.');
+      return;
+    }
+
+    // new record
     const user = {
       name: username,
       age: age,
@@ -22,24 +44,58 @@ function UserForm(props) {
 
     props.onAddNewUser(user);
 
+    // clear the fields
     setUsername('');
     setAge('');
   };
 
+  const onModalClose = () => {
+    setShowModal(false);
+    // remove error messages
+    setIsValid(true);
+  };
+
   return (
-    <form className={styles.form} onSubmit={submitHandler}>
-      <div className={styles['form__row']}>
-        <label>Username: {username}</label>
-        <input type='text' value={username} onChange={usernameChangeHandler} />
-      </div>
-      <div className={styles['form__row']}>
-        <label>Age (Years): {age}</label>
-        <input type='number' value={age} onChange={ageChangeHandler} />
-      </div>
-      <div className={styles['form__row']}>
-        <Button type='submit'>~ Add User ~</Button>
-      </div>
-    </form>
+    <>
+      {showModal && <Modal onClose={onModalClose}>{errorMessage}</Modal>}
+
+      <form className={styles.form} onSubmit={submitHandler}>
+        <div
+          className={`${styles['form__row']} ${
+            !isValid ? styles['invalid'] : ''
+          }`}
+        >
+          <label>Username:</label>
+          <input
+            type='text'
+            value={username}
+            onChange={usernameChangeHandler}
+          />
+          {!isValid && (
+            <span className={styles.error}>This field is required!</span>
+          )}
+        </div>
+        <div
+          className={`${styles['form__row']} ${
+            !isValid ? styles['invalid'] : ''
+          }`}
+        >
+          <label>Age (Years): {age}</label>
+          <input
+            type='number'
+            max='110'
+            value={age}
+            onChange={ageChangeHandler}
+          />
+          {!isValid && (
+            <span className={styles.error}>This field is required!</span>
+          )}
+        </div>
+        <div className={styles['form__row']}>
+          <Button type='submit'>~ Add User ~</Button>
+        </div>
+      </form>
+    </>
   );
 }
 
