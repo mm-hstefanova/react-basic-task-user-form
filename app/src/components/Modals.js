@@ -1,6 +1,6 @@
 import styles from './Modal.module.css';
 import Card from './Card';
-import ReactDOM from 'react-dom';
+import { createPortal } from 'react-dom';
 
 function Backdrop(props) {
   return <div className={styles.backdrop} onClick={props.onClose} />;
@@ -20,12 +20,12 @@ function ModalOverlay(props) {
 function ErrorModal(props) {
   return (
     <>
-      {ReactDOM.createPortal(
+      {createPortal(
         <Backdrop onClose={props.onClose} />,
         document.getElementById('backdrop-root')
       )}
 
-      {ReactDOM.createPortal(
+      {createPortal(
         <ModalOverlay title={props.title} text={props.text} />,
         document.getElementById('modal-root')
       )}
