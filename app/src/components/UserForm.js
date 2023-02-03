@@ -1,14 +1,17 @@
 import styles from './UserForm.module.css';
 import Button from './Button';
-import Modal from './Modal';
+import ErrorModal from './Modals';
 
 import { useState } from 'react';
 
 function UserForm(props) {
   const [username, setUsername] = useState('');
   const [age, setAge] = useState('');
+
   const [isValid, setIsValid] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
+  const [errorTitle, setErrorTitle] = useState('Invalid Input');
+
   const [showModal, setShowModal] = useState(false);
 
   const usernameChangeHandler = (event) => {
@@ -57,7 +60,13 @@ function UserForm(props) {
 
   return (
     <>
-      {showModal && <Modal onClose={onModalClose}>{errorMessage}</Modal>}
+      {showModal && (
+        <ErrorModal
+          onClose={onModalClose}
+          title={errorTitle}
+          text={errorMessage}
+        />
+      )}
 
       <form className={styles.form} onSubmit={submitHandler}>
         <div
